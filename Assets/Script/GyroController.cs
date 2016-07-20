@@ -131,28 +131,26 @@ public class GyroController : MonoBehaviour
         Material mm =Instantiate(modols[i]) as Material;
 		playermaterial.GetComponent<MeshRenderer> ().material=mm ;
 		playermaterial.transform.GetChild (0).GetComponent<MeshRenderer> ().material = Instantiate (modols [i+1]as Material);
-
-		Debug.Log (mm.mainTexture.width+"width,hight"+mm.mainTexture.height);
+       
 		//截取实例出的material的名字：
-//        string str1 = modols[i].name;
-//        string str2 = modols[i + 1].name;
-//        string[] wide = str1.Split(',');
-//        string[] high = str2.Split(',');
-//		float[] tempint_w = new float[wide.Length];
-//		float[] tempint_h=new float[high.Length];
-//        for (int q = 0; q < wide.Length; q++)
-//        {
-//            tempint_w[q] = System.Convert.ToInt32(wide[q]);
-//            Debug.Log(System.Convert.ToInt32(wide[q]));
-//        }
-//        for (int u = 0; u < high.Length; u++)
-//        {
-//			Debug.Log(System.Convert.ToInt32(high[u]));
-//            tempint_h[u] = System.Convert.ToInt32(high[u]);
-//        }
-		//float temp = tempint_w [1] / tempint_h [1];
-		float temp=(float)mm.mainTexture.width/(float)mm.mainTexture.height;
-		Vector3 playerplan_scale = new Vector3(-temp,1,-1);
+        string str1 = modols[i].name;
+        string str2 = modols[i + 1].name;
+        string[] wide = str1.Split(',');
+        string[] high = str2.Split(',');
+		float[] tempint_w = new float[wide.Length];
+		float[] tempint_h=new float[high.Length];
+        for (int q = 0; q < wide.Length; q++)
+        {
+            tempint_w[q] = System.Convert.ToInt32(wide[q]);
+            Debug.Log(System.Convert.ToInt32(wide[q]));
+        }
+        for (int u = 0; u < high.Length; u++)
+        {
+			Debug.Log(System.Convert.ToInt32(high[u]));
+            tempint_h[u] = System.Convert.ToInt32(high[u]);
+        }
+		float temp = tempint_w [1] / tempint_h [1];
+        Vector3 playerplan_scale = new Vector3(-temp,1,-1);
         playermaterial.transform.localScale = playerplan_scale;
 
         //string strtemp1= wide.ToString();
@@ -207,8 +205,8 @@ public class GyroController : MonoBehaviour
 	public void Hand_Auto()
     {
 		chose=chose==true?false:true;
-		adda = transform.rotation.eulerAngles.y;
-		addb = transform.rotation.eulerAngles.x;
+		adda = transform.rotation.eulerAngles.x;
+		addb = transform.rotation.eulerAngles.y;
 
 	//	adda=transform.rotation.eulerAngles.y;
 	//	addb = transform.rotation.eulerAngles.x;
@@ -258,11 +256,12 @@ public class GyroController : MonoBehaviour
 //			if (EventSystem.current.IsPointerOverGameObject()) 
 //			{
 				//Debug.Log ("点击在UI上"+EventSystem.current.gameObject.name);
-			adda+=Input.GetAxis("Mouse X")*camerarotaionspeed;
-			addb+=Input.GetAxis("Mouse Y")*camerarotaionspeed;
-			Vector3 newrotation = new Vector3 (addb, adda, 0) ;
+				adda+=Input.GetAxis("Mouse X");
+				addb+=Input.GetAxis("Mouse Y");
+				Vector3 newrotation = new Vector3 (-addb, -adda, 0) * camerarotaionspeed;
+				//Quaternion newquater = Quaternion.LookRotation (newrotation);
+				//transform.rotation = Quaternion.Euler (newrotation);
 			transform.rotation=Quaternion.Euler(newrotation);
-
 		//	}
 		}
 
@@ -307,7 +306,7 @@ public class GyroController : MonoBehaviour
 				leftstate = uistates.left;
 			}
 
-			else if ((Input.touchCount>0&&Input.GetTouch(0).phase == TouchPhase.Began||Input.GetMouseButton(0)) && leftstate == uistates.left)
+			else if (Input.touchCount>0&&Input.GetTouch(0).phase == TouchPhase.Began && leftstate == uistates.left)
 			{
 				timer = 0f;
 				Debug.Log("left : Down");
